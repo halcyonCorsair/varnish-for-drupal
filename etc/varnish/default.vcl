@@ -97,10 +97,19 @@ sub vcl_recv {
   }
 
   # Remove all cookies that Drupal doesn't need to know about. ANY remaining
-  # cookie will cause the request to pass-through to Apache. For the most part
+  # cookie will cause the request to pass-through to a backend. For the most part
   # we always set the NO_CACHE cookie after any POST request, disabling the
   # Varnish cache temporarily. The session cookie allows all authenticated users
   # to pass through as long as they're logged in.
+  #
+  # 1. Append a semi-colon to the front of the cookie string.
+  # 2. Remove all spaces that appear after semi-colons.
+  # 3. Match the cookies we want to keep, adding the space we removed
+  #    previously, back. (\1) is first matching group in the regsuball.
+  # 4. Remove all other cookies, identifying them by the fact that they have
+  #    no space after the preceding semi-colon.
+  # 5. Remove all spaces and semi-colons from the beginning and end of the
+  #    cookie string.
   if (req.http.Cookie) {
     set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
     set req.http.Cookie = regsuball(req.http.Cookie, ";(S{1,2}ESS[a-z0-9]+|NO_CACHE)=", "; \1=");
