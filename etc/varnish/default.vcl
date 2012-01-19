@@ -67,6 +67,14 @@ sub vcl_recv {
     return (pipe);
   }
 
+  # Do not allow outside access to cron.php or install.php.
+  if (req.url ~ "^/(cron|install)\.php$" && !client.ip ~ internal) {
+    # Have Varnish throw the error directly.
+    error 404 "Page not found.";
+    # Use a custom error page that you've defined in Drupal at the path "404".
+    # set req.url = "/404";
+  }
+
   # Handle compression correctly. Different browsers send different
   # "Accept-Encoding" headers, even though they mostly all support the same
   # compression mechanisms. By consolidating these compression headers into
