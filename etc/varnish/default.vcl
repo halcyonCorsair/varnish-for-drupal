@@ -36,10 +36,7 @@ sub vcl_recv {
   }
 
   if (req.http.Cookie ~ "SESS") {
-    if (!(req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js)(\?[a-z0-9]+)?$")) {
-      #return (pipe);
-      return (pass);
-    }
+    return (pass);
   }
 
   # Get ride of progress.js query params
