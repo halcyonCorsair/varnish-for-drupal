@@ -27,7 +27,7 @@ sub vcl_recv {
   }
 
 
-  # Allow PURGE from localhost and 192.168.{129,229}.0/24
+  # Allow PURGE from localhost and 192.168.0.0/24
   if (req.request == "PURGE") {
     if (!client.ip ~ purge) {
       error 405 "Not allowed.";
