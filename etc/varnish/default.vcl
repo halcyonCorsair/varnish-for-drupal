@@ -97,9 +97,6 @@ sub vcl_recv {
   # Always cache the following file types for all users.
   if (req.url ~ "(?i)\.(png|gif|jpeg|jpg|ico|swf|css|js)(\?[a-z0-9]+)?$") {
     unset req.http.Cookie;
-    # Debug
-    #return(pass);
-    #return(pipe);
   }
 
   # Remove all cookies that Drupal doesn't need to know about. ANY remaining
