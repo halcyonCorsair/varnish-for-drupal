@@ -35,10 +35,6 @@ sub vcl_recv {
     return (lookup);
   }
 
-  if (req.http.Cookie ~ "SESS") {
-    return (pass);
-  }
-
   # Get ride of progress.js query params
   if (req.url ~ "^/misc/progress\.js\?[0-9]+$") {
     set req.url = "/misc/progress.js";
