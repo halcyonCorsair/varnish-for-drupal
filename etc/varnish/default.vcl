@@ -107,12 +107,6 @@ sub vcl_recv {
     set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
     set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
 
-    // Remove has_js and Google Analytics cookies.
-    # Remove cookies. has_js, google analytics, drupal related, google ads, piwik, cloudflare-uid
-    set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(__[a-z]+|has_js)=[^;]*", "");
-    set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(_pk_(ses|id)[\.a-z0-9]*)=[^;]*", "");
-    set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(__[a-z]+|Drupal.toolbar.collapsed|Drupal.tableDrag.showWeight|__gads|__cfduid)=[^;]*", "");
-
     if (req.http.Cookie == "") {
       # If there are no remaining cookies, remove the cookie header. If there
       # aren't any cookie headers, Varnish's default behavior will be to cache
