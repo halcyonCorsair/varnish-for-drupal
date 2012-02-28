@@ -115,6 +115,7 @@ sub vcl_recv {
   # 5. Remove all spaces and semi-colons from the beginning and end of the
   #    cookie string.
   if (req.http.Cookie) {
+    set req.http.Cookie = ";" + req.http.Cookie;
     set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
     set req.http.Cookie = regsuball(req.http.Cookie, ";(S{1,2}ESS[a-z0-9]+|NO_CACHE)=", "; \1=");
     set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
